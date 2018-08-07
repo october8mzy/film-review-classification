@@ -51,16 +51,16 @@ def preprocess():
 def train(x_train, y_train, vocab_processor, x_dev, y_dev):
     with tf.Graph().as_default():
         session_conf = tf.ConfigProto(
-            allow_soft_placement=FLAGS.allow_soft_placement,
-            log_device_placement=FLAGS.log_device_placement)
+            allow_soft_placement=allow_soft_placement,
+            log_device_placement=log_device_placement)
         sess = tf.Session(config=session_conf)
         with sess.as_default():
             cnn = TextCNN(
                 sequence_length=x_train.shape[1],
                 num_classes=y_train.shape[1],
                 vocab_size=len(vocab_processor.vocabulary_),
-                embedding_size=FLAGS.embedding_dim,
-                filter_sizes=list(map(int, FLAGS.filter_sizes.split(","))),
+                embedding_size=embedding_dim,
+                filter_sizes=list(map(int, filter_sizes.split(","))),
                 num_filters=FLAGS.num_filters,
                 l2_reg_lambda=FLAGS.l2_reg_lambda)
 
@@ -100,7 +100,7 @@ def train(x_train, y_train, vocab_processor, x_dev, y_dev):
 
             # mini_batch
             batches = data_helpers.batch_iter(
-                list(zip(x_train, y_train)), FLAGS.batch_size, FLAGS.num_epochs)
+                list(zip(x_train, y_train)), batch_size, num_epochs)
 
             for batch in batches:
                 x_batch, y_batch = zip(*batch)
